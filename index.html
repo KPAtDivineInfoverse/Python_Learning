@@ -4,20 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Python Projects</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
+    <link rel="icon" href="https://www.python.org/static/favicon.ico" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #306998;
+            color: #FFD43B;
             text-align: center;
         }
         header {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #FFD43B;
+            color: #306998;
             padding: 10px 0;
             font-size: 24px;
+            font-weight: bold;
         }
         .container {
             max-width: 800px;
@@ -26,48 +28,27 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #306998;
         }
         .project {
             margin: 20px 0;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #FFD43B;
             border-radius: 8px;
-            background-color: #e8f5e9;
-        }
-        pre {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            text-align: left;
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-        code {
-            font-family: 'Courier New', monospace;
-        }
-        button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
+            background-color: #FFE873;
         }
         a {
             text-decoration: none;
-            color: #4CAF50;
+            color: #306998;
+            font-weight: bold;
         }
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
-<body onload="brython()">
-    <header>My Python Projects</header>
+<body>
+    <header>🐍 My Python Projects 🐍</header>
     <div class="container" id="projects-container">
     </div>
 
@@ -95,36 +76,18 @@
                     const projectTitle = document.createElement('h3');
                     projectTitle.textContent = `Project: ${file.name}`;
 
-                    const codeResponse = await fetch(file.download_url);
-                    const code = await codeResponse.text();
-
-                    const codeBlock = document.createElement('pre');
-                    const codeElement = document.createElement('code');
-                    codeElement.textContent = code;
-                    codeBlock.appendChild(codeElement);
-
-                    const runButton = document.createElement('button');
-                    runButton.textContent = 'Run Code';
-                    runButton.onclick = () => runPythonCode(code);
+                    const projectLink = document.createElement('a');
+                    projectLink.href = `${repoUrl}${file.name}`;
+                    projectLink.target = '_blank';
+                    projectLink.textContent = 'View Code';
 
                     projectDiv.appendChild(projectTitle);
-                    projectDiv.appendChild(codeBlock);
-                    projectDiv.appendChild(runButton);
+                    projectDiv.appendChild(projectLink);
                     container.appendChild(projectDiv);
                 }
             } catch (error) {
                 console.error('Error fetching files:', error);
             }
-        }
-
-        function runPythonCode(code) {
-            const existingScript = document.querySelector('script[type="text/python"]');
-            if (existingScript) existingScript.remove();
-
-            const script = document.createElement('script');
-            script.type = 'text/python';
-            script.textContent = code;
-            document.body.appendChild(script);
         }
 
         fetchFiles();
