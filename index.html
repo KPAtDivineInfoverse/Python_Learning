@@ -54,8 +54,10 @@
 
         async function fetchFiles() {
             try {
+
                 const response = await fetch(apiUrl);
                 const files = await response.json();
+console.log(files);
 
                 files.forEach(file => {
                     if (file.name.startsWith('lec-') && file.name.endsWith('.py')) {
