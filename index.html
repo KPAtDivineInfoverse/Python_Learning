@@ -56,15 +56,10 @@
         const repoUrl = "https://github.com/KPAtDivineInfoverse/Python_Learning/blob/main/Day-1-Python/";
         const apiUrl = "https://api.github.com/repos/KPAtDivineInfoverse/Python_Learning/contents/Day-1-Python";
         const container = document.getElementById('projects-container');
-        const githubToken = "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"; // Add your GitHub personal access token
 
         async function fetchFiles() {
             try {
-                const response = await fetch(apiUrl, {
-                    headers: {
-                        'Authorization': `token ${githubToken}`
-                    }
-                });
+                const response = await fetch(apiUrl);
 
                 if (response.status === 403) {
                     container.innerHTML = '<p style="color: red;">API rate limit exceeded. Please try again later.</p>';
