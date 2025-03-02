@@ -33,6 +33,17 @@
             border-radius: 8px;
             background-color: #e8f5e9;
         }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            text-align: left;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+        }
         a {
             text-decoration: none;
             color: #4CAF50;
@@ -57,7 +68,7 @@
                 const response = await fetch(apiUrl);
                 const files = await response.json();
 
-                files.forEach(file => {
+                files.forEach(async file => {
                     if (file.name.startsWith('lec-') && file.name.endsWith('.py')) {
                         const projectDiv = document.createElement('div');
                         projectDiv.className = 'project';
@@ -65,13 +76,16 @@
                         const projectTitle = document.createElement('h3');
                         projectTitle.textContent = `Project: ${file.name}`;
 
-                        const projectLink = document.createElement('a');
-                        projectLink.href = `${repoUrl}${file.name}`;
-                        projectLink.target = '_blank';
-                        projectLink.textContent = 'View Code';
+                        const codeResponse = await fetch(file.download_url);
+                        const code = await codeResponse.text();
+
+                        const codeBlock = document.createElement('pre');
+                        const codeElement = document.createElement('code');
+                        codeElement.textContent = code;
+                        codeBlock.appendChild(codeElement);
 
                         projectDiv.appendChild(projectTitle);
-                        projectDiv.appendChild(projectLink);
+                        projectDiv.appendChild(codeBlock);
                         container.appendChild(projectDiv);
                     }
                 });
