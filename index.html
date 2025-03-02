@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Python Projects</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,6 +45,18 @@
         code {
             font-family: 'Courier New', monospace;
         }
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
         a {
             text-decoration: none;
             color: #4CAF50;
@@ -53,7 +66,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="brython()">
     <header>My Python Projects</header>
     <div class="container" id="projects-container">
     </div>
@@ -84,14 +97,26 @@
                         codeElement.textContent = code;
                         codeBlock.appendChild(codeElement);
 
+                        const runButton = document.createElement('button');
+                        runButton.textContent = 'Run Code';
+                        runButton.onclick = () => runPythonCode(code);
+
                         projectDiv.appendChild(projectTitle);
                         projectDiv.appendChild(codeBlock);
+                        projectDiv.appendChild(runButton);
                         container.appendChild(projectDiv);
                     }
                 });
             } catch (error) {
                 console.error('Error fetching files:', error);
             }
+        }
+
+        function runPythonCode(code) {
+            const script = document.createElement('script');
+            script.type = 'text/python';
+            script.textContent = code;
+            document.body.appendChild(script);
         }
 
         fetchFiles();
