@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Python Projects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            font-size: 24px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .project {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #e8f5e9;
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>My Python Projects</header>
+    <div class="container" id="projects-container">
+    </div>
+
+    <script>
+        const repoUrl = "https://github.com/KPAtDivineInfoverse/Python_Learning/";
+        const apiUrl = "https://api.github.com/repos/KPAtDivineInfoverse/Python_Learning/contents/";
+        const container = document.getElementById('projects-container');
+
+        async function fetchFiles() {
+            try {
+                const response = await fetch(apiUrl);
+                const files = await response.json();
+
+                files.forEach(file => {
+                    if (file.name.startsWith('lec-') && file.name.endsWith('.py')) {
+                        const projectDiv = document.createElement('div');
+                        projectDiv.className = 'project';
+
+                        const projectTitle = document.createElement('h3');
+                        projectTitle.textContent = `Project: ${file.name}`;
+
+                        const projectLink = document.createElement('a');
+                        projectLink.href = `${repoUrl}${file.name}`;
+                        projectLink.target = '_blank';
+                        projectLink.textContent = 'View Code';
+
+                        projectDiv.appendChild(projectTitle);
+                        projectDiv.appendChild(projectLink);
+                        container.appendChild(projectDiv);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching files:', error);
+            }
+        }
+
+        fetchFiles();
+    </script>
+</body>
+</html>
