@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KP's Python Learning Files</title>
+    <title>My Python Projects</title>
     <link rel="icon" href="https://www.python.org/static/favicon.ico" type="image/x-icon">
     <style>
         body {
@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-    <header>🐍 KP's Python Learning Files 🐍</header>
+    <header>🐍 My Python Projects 🐍</header>
     <div class="container" id="projects-container">
     </div>
 
@@ -56,10 +56,21 @@
         const repoUrl = "https://github.com/KPAtDivineInfoverse/Python_Learning/blob/main/Day-1-Python/";
         const apiUrl = "https://api.github.com/repos/KPAtDivineInfoverse/Python_Learning/contents/Day-1-Python";
         const container = document.getElementById('projects-container');
+        const githubToken = "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"; // Add your GitHub personal access token
 
         async function fetchFiles() {
             try {
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`
+                    }
+                });
+
+                if (response.status === 403) {
+                    container.innerHTML = '<p style="color: red;">API rate limit exceeded. Please try again later.</p>';
+                    return;
+                }
+
                 const files = await response.json();
 
                 const filteredFiles = files.filter(file => file.name.startsWith('lec-') && file.name.endsWith('.py'));
@@ -87,6 +98,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching files:', error);
+                container.innerHTML = '<p style="color: red;">Failed to load projects. Please check the console for details.</p>';
             }
         }
 
