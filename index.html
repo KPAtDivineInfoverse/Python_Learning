@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -100,4 +100,173 @@
         fetchFiles();
     </script>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Python Projects</title>
+        <link rel="icon" href="https://www.python.org/static/favicon.ico"
+            type="image/x-icon">
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #306998;
+            color: #FFD43B;
+            text-align: center;
+        }
+        header {
+            background-color: #FFD43B;
+            color: #306998;
+            padding: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #306998;
+        }
+        .project {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #FFD43B;
+            border-radius: 8px;
+            background-color: #FFE873;
+        }
+        a {
+            text-decoration: none;
+            color: #306998;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #FFD43B;
+            color: #306998;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+    </head>
+    <body>
+        <header>🐍 My Python Projects 🐍</header>
+        <div class="container" id="projects-container"></div>
+
+        <div class="pagination">
+            <button id="prev-btn" onclick="prevPage()"
+                disabled>Previous</button>
+            <span id="page-info"></span>
+            <button id="next-btn" onclick="nextPage()">Next</button>
+        </div>
+
+        <script>
+        const repoUrl = "https://github.com/KPAtDivineInfoverse/Python_Learning/blob/main/Day-1-Python/";
+        const apiUrl = "https://api.github.com/repos/KPAtDivineInfoverse/Python_Learning/contents/Day-1-Python";
+        const container = document.getElementById('projects-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pageInfo = document.getElementById('page-info');
+
+        let files = [];
+        let currentPage = 1;
+        const itemsPerPage = 5;
+
+        async function fetchFiles() {
+            try {
+                const response = await fetch(apiUrl);
+
+                if (response.status === 403) {
+                    container.innerHTML = '<p style="color: red;">API rate limit exceeded. Please try again later.</p>';
+                    return;
+                }
+
+                files = await response.json();
+
+                files = files.filter(file => file.name.startsWith('lec-') && file.name.endsWith('.py'));
+                files.sort((a, b) => {
+                    const numA = parseInt(a.name.match(/\d+/)[0]);
+                    const numB = parseInt(b.name.match(/\d+/)[0]);
+                    return numA - numB;
+                });
+
+                displayFiles();
+            } catch (error) {
+                console.error('Error fetching files:', error);
+                container.innerHTML = '<p style="color: red;">Failed to load projects. Please check the console for details.</p>';
+            }
+        }
+
+        function displayFiles() {
+            container.innerHTML = "";
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedFiles = files.slice(start, end);
+
+            paginatedFiles.forEach(file => {
+                const projectDiv = document.createElement('div');
+                projectDiv.className = 'project';
+
+                const projectTitle = document.createElement('h3');
+                projectTitle.textContent = `Project: ${file.name}`;
+
+                const projectLink = document.createElement('a');
+                projectLink.href = `${repoUrl}${file.name}`;
+                projectLink.target = '_blank';
+                projectLink.textContent = 'View Code';
+
+                projectDiv.appendChild(projectTitle);
+                projectDiv.appendChild(projectLink);
+                container.appendChild(projectDiv);
+            });
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(files.length / itemsPerPage);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+            if (currentPage < Math.ceil(files.length / itemsPerPage)) {
+                currentPage++;
+                displayFiles();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayFiles();
+            }
+        }
+
+        fetchFiles();
+    </script>
+    </body>
 </html>
